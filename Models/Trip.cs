@@ -29,6 +29,8 @@ namespace TrackR_API.Models
 
         public float Reimbursabledistance { get; set; }
 
+        public float ReimbursementValue { get; set; }
+
         public bool IsEligibleForAllowance { get; set; }
 
         public DateTime CreatedAt { get; set; }

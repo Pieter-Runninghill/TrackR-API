@@ -1,40 +1,41 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TrackR_API.Models;
+using TrackR_API.Repository;
 using TrackR_API.Repository.IRepository;
 
 namespace TrackR_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class TripController : ControllerBase
     {
-        private readonly IUserRepository _userRepository;
+        private readonly ITripRepository _tripRepository;
 
-        public UsersController(IUserRepository userRepository)
+        public TripController(ITripRepository tripRepository)
         {
-            _userRepository = userRepository;
+            _tripRepository = tripRepository;
         }
 
-        [HttpGet("getUserByEmail/{emailAddress}")]
+        [HttpGet("trips")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<User>> GetUser(string emailAddress)
+        public async Task<ActionResult<List<Trip>>> GetAllTripsByUser([FromRoute] int userId)
         {
             try
             {
-                var user = await _userRepository.GetUser(emailAddress);
+                var trips = await _tripRepository.GetTripsByUserId(userId);
 
-                if (user == null)
+                if (trips == null)
                 {
                     return NotFound();
                 }
 
-                return Ok(user);
+                return Ok(trips);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500, $"An internal server error occurred. {ex.Message}");
             }
@@ -45,44 +46,44 @@ namespace TrackR_API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<User>>> GetAllUsers()
+        public async Task<ActionResult<List<Trip>>> GetTripById([FromRoute] int Id)
         {
             try
             {
-                var users = await _userRepository.GetUsers();
+                var trip = await _tripRepository.GetTripById(Id);
 
-                if(users == null)
+                if (trip == null)
                 {
                     return NotFound();
                 }
 
-                return Ok(users);
+                return Ok(trip);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500, $"An internal server error occurred. {ex.Message}");
             }
         }
 
-        [HttpPut]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> UpdateUser([FromBody] User user)
+        public async Task<ActionResult> Create([FromBody] Trip entity)
         {
             try
             {
-                if (user == null)
+                if (entity == null)
                 {
                     return BadRequest();
                 }
 
-                await _userRepository.Update(user);
-                return Ok();
+                await _tripRepository.Create(entity);
+                return Ok(entity);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"An internal server error occurred. {ex.Message}");
+                 return StatusCode(500, $"An internal server error occurred. {ex.Message}");
             }
         }
     }
