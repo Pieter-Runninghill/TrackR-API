@@ -19,8 +19,8 @@ namespace TrackR_API.Models
 
         public User User { get; set; }
 
-        public ICollection<ClientLocation> ClientLocation { get; set; }
+        public ICollection<ClientLocation>? ClientLocation { get; set; }
 
-        public ICollection<Trip> Trips { get; set; }
+        public ICollection<Trip>? Trips { get; set; }
     }
 }

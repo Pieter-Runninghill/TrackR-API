@@ -35,9 +35,9 @@ namespace TrackR_API.Models
 
         public DateTime CreatedAt { get; set; }
 
-        public User User { get; set; }
+        public User? User { get; set; }
 
-        public Client Client { get; set; }
+        public Client? Client { get; set; }
 
     }
 }
