@@ -17,12 +17,12 @@ namespace TrackR_API.Controllers
             _tripRepository = tripRepository;
         }
 
-        [HttpGet("trips")]
+        [HttpGet("getTripsByUserId/{userId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<Trip>>> GetAllTripsByUser([FromRoute] int userId)
+        public async Task<ActionResult<List<Trip>>> GetAllTripsByUser(int userId)
         {
             try
             {
@@ -41,12 +41,12 @@ namespace TrackR_API.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("{Id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<Trip>>> GetTripById([FromRoute] int Id)
+        public async Task<ActionResult<List<Trip>>> GetTripById( int Id)
         {
             try
             {

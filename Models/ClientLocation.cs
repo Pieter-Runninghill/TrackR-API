@@ -19,6 +19,6 @@ namespace TrackR_API.Models
         
         public double clientLongitude { get; set; }
 
-        public Client Client { get; set; }
+        public Client? Client { get; set; }
     }
 }

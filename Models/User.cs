@@ -27,8 +27,8 @@ namespace TrackR_API.Models
         
         public DateTime CreatedAt { get; set; }
 
-        public ICollection<Client> Clients { get; set; }
+        public ICollection<Client>? Clients { get; set; }
 
-        public ICollection<Trip> Trips { get; set; }
+        public ICollection<Trip>? Trips { get; set; }
     }
 }
