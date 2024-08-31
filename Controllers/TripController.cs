@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TrackR_API.Models;
+using TrackR_API.Models.RequestModel;
 using TrackR_API.Repository;
 using TrackR_API.Repository.IRepository;
 
@@ -84,6 +85,34 @@ namespace TrackR_API.Controllers
             catch (Exception ex)
             {
                  return StatusCode(500, $"An internal server error occurred. {ex.Message}");
+            }
+        }
+
+        [HttpPost("createTrip")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<Trip>> Createtrip([FromBody] TripRequest entity)
+        {
+            try
+            {
+                if (entity == null)
+                {
+                    return BadRequest();
+                }
+
+                var trip = await _tripRepository.CreateTrip(entity);
+
+                if (trip == null)
+                {
+                    return BadRequest();
+                }
+
+                return Ok(trip);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An internal server error occurred. {ex.Message}");
             }
         }
     }

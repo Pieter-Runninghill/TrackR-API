@@ -1,4 +1,6 @@
 ﻿using TrackR_API.Models;
+using TrackR_API.Models.RequestModel;
+using TrackR_API.Models.ResponseModel;
 
 namespace TrackR_API.Repository.IRepository
 {
@@ -9,5 +11,7 @@ namespace TrackR_API.Repository.IRepository
         Task<Trip> GetTripById (int id);
 
         Task Create(Trip entity);
+
+        Task<Trip> CreateTrip(TripRequest entity);
     }
 }

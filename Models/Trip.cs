@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace TrackR_API.Models
 {
@@ -35,6 +36,7 @@ namespace TrackR_API.Models
 
         public DateTime CreatedAt { get; set; }
 
+        [JsonIgnore]
         public User? User { get; set; }
 
         public Client? Client { get; set; }

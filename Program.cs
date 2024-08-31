@@ -18,9 +18,24 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<ITripRepository, TripRepository>();
+builder.Services.AddTransient<IClientRepository, ClientRepository>();
+builder.Services.AddTransient<IClientLocaionRepository, ClientLocationRepository>();
 builder.Services.AddTransient<EmailValidator>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowMAUICalls",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
+
 var app = builder.Build();
+
+app.UseCors("AllowMAUICalls");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

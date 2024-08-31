@@ -17,6 +17,20 @@ namespace TrackR_API.Repository
             _emailValidator = emailValidator;
         }
 
+        public async Task Create(User entity)
+        {
+            try
+            {
+                await _context.Users.AddAsync(entity);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+        }
+
         public async Task<User> GetUser(string emailAddress)
         {
             try

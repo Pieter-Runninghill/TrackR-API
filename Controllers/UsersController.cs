@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TrackR_API.Models;
+using TrackR_API.Models.RequestModel;
 using TrackR_API.Repository.IRepository;
 
 namespace TrackR_API.Controllers
@@ -78,6 +79,42 @@ namespace TrackR_API.Controllers
                 }
 
                 await _userRepository.Update(user);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An internal server error occurred. {ex.Message}");
+            }
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> CreateUser([FromBody] UserRequest user)
+        {
+            try
+            {
+                if (user == null)
+                {
+                    return BadRequest();
+                }
+
+                User entity = new User
+                {
+                    CreatedAt = DateTime.Now,
+                    Name = user.Name,
+                    Email = user.Email,
+                    HomeAddress = "Home",
+                    HomeLatitude = 0,
+                    HomeLongitude = 0,
+                    OfficeAddress = "Cascades Office Park, Wasbank St, Little Falls, Roodepoort, 1724",
+                    OfficeLatitude = -25.469062531150492,
+                    OfficeLongitude = 30.995649256207436,
+                    
+                };
+
+                await _userRepository.Create(entity);
                 return Ok();
             }
             catch (Exception ex)
