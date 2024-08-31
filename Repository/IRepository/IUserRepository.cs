@@ -1,4 +1,5 @@
 ﻿using TrackR_API.Models;
+using TrackR_API.Models.RequestModel;
 
 namespace TrackR_API.Repository.IRepository
 {
@@ -11,6 +12,8 @@ namespace TrackR_API.Repository.IRepository
         Task<List<User>> GetUsers();
 
         Task Create(User entity);
+
+        Task<bool> UserLogin(UserLoginRequest request);
 
     }
 }

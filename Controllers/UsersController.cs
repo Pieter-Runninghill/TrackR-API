@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TrackR_API.Models;
 using TrackR_API.Models.RequestModel;
+using TrackR_API.Models.ResponseModel;
 using TrackR_API.Repository.IRepository;
 
 namespace TrackR_API.Controllers
@@ -100,6 +101,8 @@ namespace TrackR_API.Controllers
                     return BadRequest();
                 }
 
+                var passwordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
+
                 User entity = new User
                 {
                     CreatedAt = DateTime.Now,
@@ -111,11 +114,47 @@ namespace TrackR_API.Controllers
                     OfficeAddress = "Cascades Office Park, Wasbank St, Little Falls, Roodepoort, 1724",
                     OfficeLatitude = -25.469062531150492,
                     OfficeLongitude = 30.995649256207436,
-                    
+                    PasswordHash = passwordHash
                 };
 
                 await _userRepository.Create(entity);
                 return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An internal server error occurred. {ex.Message}");
+            }
+        }
+
+        [HttpPost("login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult> UserLogin([FromBody] UserLoginRequest request)
+        {
+            try
+            {
+                if (request == null)
+                {
+                    return BadRequest();
+                }
+
+                var user = await _userRepository.UserLogin(request);
+
+                if (!user)
+                {
+                    return Unauthorized();
+                }
+
+                Identity identity = new Identity
+                {
+                    AuthenticationType = "Password Authentication",
+                    IsAuthenticated = true,
+
+                };
+
+                return Ok(identity);
             }
             catch (Exception ex)
             {
