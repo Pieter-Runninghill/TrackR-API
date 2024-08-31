@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TrackR_API.Context;
 using TrackR_API.Models;
+using TrackR_API.Models.RequestModel;
 using TrackR_API.Repository.IRepository;
 using TrackR_API.Utils;
 
@@ -73,6 +74,28 @@ namespace TrackR_API.Repository
         {
            _context.Users.Update(entity);
            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> UserLogin(UserLoginRequest request)
+        {
+            try
+            {
+                var user = await _context.Users.Where(x => x.Email == request.Email).FirstOrDefaultAsync();
+
+                if (user != null)
+                {
+                    bool isPasswordCorrect = BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash);
+
+                    return isPasswordCorrect;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
     }
 }
