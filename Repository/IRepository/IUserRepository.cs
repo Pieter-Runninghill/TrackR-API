@@ -10,5 +10,7 @@ namespace TrackR_API.Repository.IRepository
 
         Task<List<User>> GetUsers();
 
+        Task Create(User entity);
+
     }
 }
